@@ -4,13 +4,26 @@
  * 椴搁奔濞樹綑棰濇瀹狅細閫氳繃 webServer 娉ㄥ唽涓や釜 HTTP 璺敱渚涙祻瑙堝櫒绔?client 璋冪敤銆? *
  *   GET  /__whale-pet/balance  鏌ヨ DeepSeek 鍓╀綑浣欓锛坈url 鈫?node fetch 鍙岄€氶亾锛? *   GET  /__whale-pet/image    杩斿洖椴搁奔濞樺舰璞″浘鐨?data URI锛堜粠 G:\WorkSpace\DSH\dsh-whale-pet\whale_pet_b64.txt 璇诲彇锛? *
  * API Key 閫氳繃鍑嵁鏈嶅姟瑙ｆ瀽锛圖EEPSEEK_API_KEY锛夛紝缁?stdin 绠￠亾浼犵粰 curl锛? * 涓嶈惤鍛戒护琛岋紱node fetch 澶囩敤閫氶亾璧扮幆澧冨彉閲忋€傚弻閫氶亾淇濊瘉鍙敤鎬с€? */
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 
 export const name = 'dsh-whale-pet'
 // webServer 由 web 组合保证提供；声明为硬依赖使 apply 等待其就绪
 export const inject = ['webServer']
 
-const IMAGE_B64_FILE = 'G:\\WorkSpace\\DSH\\dsh-whale-pet\\whale_pet_b64.txt'
+// 形象图 base64 候选路径：优先随插件包自身解析（仓库即包时 b64 在 plugin/ 上一级；
+// 仅复制 plugin/ 安装时 b64 与 index.js 同目录），最后回退旧版硬编码的本机开发路径。
+const IMAGE_B64_CANDIDATES = [
+  fileURLToPath(new URL('../whale_pet_b64.txt', import.meta.url)),
+  fileURLToPath(new URL('./whale_pet_b64.txt', import.meta.url)),
+  'G:\\WorkSpace\\DSH\\dsh-whale-pet\\whale_pet_b64.txt',
+]
+const IMAGE_B64_FILE = (() => {
+  for (const candidate of IMAGE_B64_CANDIDATES) {
+    if (existsSync(candidate)) return candidate
+  }
+  return IMAGE_B64_CANDIDATES[0]
+})()
 const BALANCE_ENDPOINT = 'https://api.deepseek.com/user/balance'
 
 /** 璇诲彇璇锋眰浣擄紙JSON锛?*/

@@ -25,28 +25,33 @@ DeepSeek Harness 鲸鱼娘余额桌宠 —— 作为固定插件常驻在 dsh We
 
 ```
 dsh-whale-pet/
-├── plugin/                  # 插件源码(安装到 profile 的源)
-│   ├── index.js             # Host 端:/__whale-pet/balance 余额、/__whale-pet/image 形象图
-│   ├── client.js            # 浏览器端:桌宠 UI(bundle 无需构建)
-│   ├── cordis.patch.yml     # bundle 补丁层(插入插件行)
-│   └── package.json         # 包声明(dsh.bundle.patch + dsh.client.platform)
-├── assets/                  # 素材库(形象原图、预览图、素材清单)
-├── whale_pet.png            # 当前使用的鲸鱼娘形象
-├── whale_pet_b64.txt        # 形象图 base64(Host 端从这里读取)
-└── 启动说明.md               # 原始安装笔记(中文)
+├── package.json              # 仓库根包声明(供 git 安装:dsh.bundle.patch + dsh.client + files)
+├── plugin/                   # 插件源码(手动复制安装时的包源)
+│   ├── index.js              # Host 端:/__whale-pet/balance 余额、/__whale-pet/image 形象图
+│   ├── client.js             # 浏览器端:桌宠 UI(bundle 无需构建)
+│   ├── cordis.patch.yml      # bundle 补丁层(插入插件行)
+│   └── package.json          # plugin/ 形态的包声明
+├── assets/                   # 素材库(形象原图、预览图、素材清单)
+├── whale_pet.png             # 当前使用的鲸鱼娘形象
+├── whale_pet_b64.txt         # 形象图 base64(Host 端从插件包内读取)
+└── 启动说明.md                # 原始安装笔记(中文)
 ```
 
 ## 安装
 
-本插件是 dsh 的 **out-of-tree bundle**,注册进 web profile:
+本插件是 dsh 的 **out-of-tree bundle**。形象图路径在 `index.js` 里**随插件包自身解析**(优先 `plugin/` 上一级的 `whale_pet_b64.txt`,兼容仅复制 `plugin/` 时与 `index.js` 同目录),所以两种安装形态都不需要改代码。
 
-1. 安装插件包到 profile(以下任一):
-   - 把 `plugin/` 四个文件放入 `C:\Users\<you>\.dsh\profiles\web\node_modules\dsh-whale-pet\`
-   - 或在 profile 目录执行 `pnpm add file:<此仓库路径>` / 用 `dsh plugin --profile web add <此仓库路径>`
-2. 确认 profile 的 `package.json` 中 `dsh.profile.bundles` 含 `"dsh-whale-pet"`(在 `@deepseek-ai/dsh-web-app` 之后)
-3. 重启 Harness
+### 方式一:从 GitHub 直接安装(推荐)
 
-启动后浏览器刷新页面,右下角即出现鲸鱼娘。
+```sh
+dsh plugin --profile web add github:Yelloooooow/dsh-whale-pet
+```
+
+`dsh plugin` 会把仓库作为插件包安装到 profile,并因包声明了 `dsh.bundle.patch` 而**自动加入 `dsh.profile.bundles`**。`whale_pet_b64.txt` 随包分发。装完重启 Harness、刷新页面即出现鲸鱼娘。
+
+### 方式二:手动复制 `plugin/`
+
+把 `plugin/` 的四个文件放入 `C:\Users\<you>\.dsh\profiles\web\node_modules\dsh-whale-pet\`,并**把 `whale_pet_b64.txt` 也复制进同一目录**(形象图随包读取)。确认 profile 的 `package.json` 中 `dsh.profile.bundles` 含 `"dsh-whale-pet"`,然后重启 Harness。
 
 ### 依赖的服务
 
@@ -63,8 +68,7 @@ dsh-whale-pet/
 2. 重新生成 base64 到 `whale_pet_b64.txt`:
    - PowerShell:`[Convert]::ToBase64String([IO.File]::ReadAllBytes("$PWD\whale_pet.png")) > whale_pet_b64.txt`
    - Git Bash:`base64 -w0 whale_pet.png > whale_pet_b64.txt`
-3. 修改 `plugin/index.js` 顶部的 `IMAGE_B64_FILE`(默认硬编码为本机绝对路径 `G:\WorkSpace\DSH\dsh-whale-pet\whale_pet_b64.txt`,**换机器请改成你自己的路径**)
-4. 同步 `plugin/` 到 profile 并重启 Harness
+3. 同步 `plugin/` 与 `whale_pet_b64.txt` 到 profile(`index.js` 会从包内找到它,无需改路径),重启 Harness 生效
 
 ## 许可与署名
 
