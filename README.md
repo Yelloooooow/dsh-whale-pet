@@ -11,15 +11,9 @@ DeepSeek Harness 鲸鱼娘余额桌宠 —— 作为固定插件常驻在 dsh We
 
 ## 效果预览
 
-```
-┌────────────────────────┐
-│  DeepSeek 余额          │
-│      ¥51.01            │
-│      余额可用            │
-│        ▾               │
-│       🐋 ← 拖动 / 单击刷新 / 双击用量页
-└────────────────────────┘
-```
+<img src="preview.png" width="280" alt="效果预览:鲸鱼娘桌宠 · DeepSeek 余额气泡">
+
+> 鲸鱼娘形象 + 余额气泡(图中 ¥43.39 为真实余额);单击刷新,双击打开用量页,按住拖动摆放。
 
 ## 目录结构
 
@@ -32,6 +26,7 @@ dsh-whale-pet/
 │   ├── cordis.patch.yml      # bundle 补丁层(插入插件行)
 │   └── package.json          # plugin/ 形态的包声明
 ├── assets/                   # 素材库(形象原图、预览图、素材清单)
+├── preview.png               # README 效果预览截图
 ├── whale_pet.png             # 当前使用的鲸鱼娘形象
 ├── whale_pet_b64.txt         # 形象图 base64(Host 端从插件包内读取)
 └── 启动说明.md                # 原始安装笔记(中文)
