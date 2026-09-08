@@ -1,0 +1,5 @@
+# dsh-whale-pet: 鲸鱼娘余额桌宠（右下角常驻 + 气泡显示 DeepSeek 余额）。
+# 由 web profile 的 dsh.profile.bundles 加载：包自带 patch，插入插件行。
+- insert:
+    - id: dsh-whale-pet
+      name: dsh-whale-pet
