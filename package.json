@@ -1,6 +1,6 @@
 {
   "name": "dsh-whale-pet",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "DeepSeek Harness 鲸鱼娘余额桌宠插件：右下角常驻鲸鱼娘,气泡显示 DeepSeek 剩余余额;可拖动并记忆位置,单击刷新余额,双击打开用量页。",
   "type": "module",
   "main": "./plugin/index.js",
